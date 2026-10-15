@@ -3,11 +3,10 @@ A collection of selected web security lab write-ups documenting practical vulner
 The goal of this repository is to develop and demonstrate a structured approach to web application penetration testing, from identifying potential weaknesses to validating their impact and recommending appropriate security controls.
 
 ## Areas Covered
-* **Access Control & IDOR:** Testing object-level authorization and identifying unauthorized access to application resources.
-* **Authentication & JWT:** Examining authentication mechanisms, token validation, and common implementation weaknesses.
-* **Server-Side Request Forgery (SSRF):** Investigating server-side request behavior and weaknesses in input validation.
-* **Business Logic:** Identifying flaws in application workflows and state transitions.
-* **Information Disclosure:** Assessing unintended exposure of sensitive information through application responses and error messages.
+* **Access Control:** Testing for missing authorization checks in multi-step workflows and identifying opportunities for unauthorized privilege escalation.
+* **Server-Side Request Forgery (SSRF):** Testing blacklist-based input filters and investigating techniques that may allow restrictions on server-side requests to be bypassed.
+* **JSON Web Tokens (JWT):** Examining JWT verification and testing how trust in attacker-controlled signing keys can lead to authentication bypass.
+* **Business Logic:** Analyzing application workflows and state transitions to identify ways to bypass authentication or other intended restrictions.
 
 ## Methodology
 Each write-up aims to document:
@@ -25,17 +24,14 @@ Each write-up aims to document:
 * OWASP web security concepts
 
 ## Lab Write-ups
-### Access Control & IDOR
-* [User ID Controlled by Request Parameter](access-control/user-id-controlled-by-request-parameter.md)
-
-### Authentication & JWT
-* [JWT Authentication Bypass via Unverified Signature](jwt/unverified-signature.md)
+### Access Control
+* [Multi-Step Process with No Access Control on One Step](access-control/multi-step-process-no-access-control.md) — Practitioner
 
 ### Server-Side Request Forgery (SSRF)
-* [Basic SSRF Against the Local Server](ssrf/basic-ssrf-local-server.md)
+* [SSRF with Blacklist-Based Input Filter](ssrf/ssrf-blacklist-filter.md) — Practitioner
+
+### JSON Web Tokens (JWT)
+* [JWT Authentication Bypass via JWK Header Injection](jwt/jwk-header-injection.md) — Practitioner
 
 ### Business Logic
-* [Authentication Bypass via Flawed State Machine](business-logic/flawed-state-machine.md)
-
-*Write-ups will be added as the corresponding labs are completed and documented.*
-
+* [Authentication Bypass via Flawed State Machine](business-logic/flawed-state-machine.md) — Practitioner
