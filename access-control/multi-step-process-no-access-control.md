@@ -1,4 +1,9 @@
-# Vulnerability Report: Multi-Step Process with No Access Control on One Step (PortSwigger Web Security Academy - Access Control)
+# Lab: Multi-Step Process with No Access Control on One Step - Access Control - PortSwigger Web Security Academy
+
+**Platform:** PortSwigger Web Security Academy  
+**Category:** Access Control  
+**Difficulty:** Practitioner  
+**Lab:** [Open the official lab](https://portswigger.net/web-security/access-control/lab-multi-step-process-with-no-access-control-on-one-step)
 
 ## 1. Executive Summary
 A broken access control vulnerability was identified in a multi-step administrative workflow in a PortSwigger Web Security Academy lab, "Multi-Step Process with No Access Control on One Step".
@@ -8,6 +13,7 @@ The final role-change request did not properly enforce administrator permissions
 - **Platform:** PortSwigger Web Security Academy
 - **Category:** Access Control
 - **Vulnerability Type:** Broken Access Control
+- **Difficulty:** Practitioner
 - **Affected Endpoint:** `POST /admin-roles`
 - **CWE:** CWE-862 — Missing Authorization
 
