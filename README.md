@@ -4,6 +4,7 @@ The goal of this repository is to develop and demonstrate a structured approach 
 
 ## Areas Covered
 * **Access Control:** Testing for missing authorization checks in multi-step workflows and identifying opportunities for unauthorized privilege escalation.
+* **SQL Injection:** Testing for SQL injection in application inputs, bypassing input filters through XML entity encoding, and assessing the potential for unauthorized database data retrieval.
 
 ## Methodology
 Each write-up aims to document:
