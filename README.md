@@ -25,13 +25,13 @@ Each write-up aims to document:
 
 ## Lab Write-ups
 ### Access Control
-* [Multi-Step Process with No Access Control on One Step](access-control/multi-step-process-no-access-control.md) — Practitioner
+* [Multi-Step Process with No Access Control on One Step](access-control/multi-step-process-no-access-control.md) - Practitioner
 
 ### Server-Side Request Forgery (SSRF)
-* [SSRF with Blacklist-Based Input Filter](ssrf/ssrf-blacklist-filter.md) — Practitioner
+* [SSRF with Blacklist-Based Input Filter](ssrf/ssrf-blacklist-filter.md) - Practitioner
 
 ### JSON Web Tokens (JWT)
-* [JWT Authentication Bypass via JWK Header Injection](jwt/jwk-header-injection.md) — Practitioner
+* [JWT Authentication Bypass via JWK Header Injection](jwt/jwk-header-injection.md) - Practitioner
 
 ### Business Logic
-* [Authentication Bypass via Flawed State Machine](business-logic/flawed-state-machine.md) — Practitioner
+* [Authentication Bypass via Flawed State Machine](business-logic/flawed-state-machine.md) - Practitioner
