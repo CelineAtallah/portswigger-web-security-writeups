@@ -4,9 +4,6 @@ The goal of this repository is to develop and demonstrate a structured approach 
 
 ## Areas Covered
 * **Access Control:** Testing for missing authorization checks in multi-step workflows and identifying opportunities for unauthorized privilege escalation.
-* **Server-Side Request Forgery (SSRF):** Testing blacklist-based input filters and investigating techniques that may allow restrictions on server-side requests to be bypassed.
-* **JSON Web Tokens (JWT):** Examining JWT verification and testing how trust in attacker-controlled signing keys can lead to authentication bypass.
-* **Business Logic:** Analyzing application workflows and state transitions to identify ways to bypass authentication or other intended restrictions.
 
 ## Methodology
 Each write-up aims to document:
@@ -26,12 +23,3 @@ Each write-up aims to document:
 ## Lab Write-ups
 ### Access Control
 * [Multi-Step Process with No Access Control on One Step](access-control/multi-step-process-no-access-control.md) - Practitioner
-
-### Server-Side Request Forgery (SSRF)
-* [SSRF with Blacklist-Based Input Filter](ssrf/ssrf-blacklist-filter.md) - Practitioner
-
-### JSON Web Tokens (JWT)
-* [JWT Authentication Bypass via JWK Header Injection](jwt/jwk-header-injection.md) - Practitioner
-
-### Business Logic
-* [Authentication Bypass via Flawed State Machine](business-logic/flawed-state-machine.md) - Practitioner
