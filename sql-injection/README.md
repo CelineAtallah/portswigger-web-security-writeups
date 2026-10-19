@@ -1,5 +1,10 @@
 # Vulnerability Report: SQL Injection with Filter Bypass via XML Encoding (PortSwigger Web Security Academy - SQL Injection)
 
+**Platform:** PortSwigger Web Security Academy
+**Category:** SQL Injection
+**Difficulty:** Practitioner
+**Lab:** [Open the official lab](https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding)
+
 ## 1. Executive Summary
 A SQL injection vulnerability was identified in the XML-based stock-check functionality in a PortSwigger Web Security Academy lab, "SQL injection with filter bypass via XML encoding".
 The application's security filter blocked a direct SQL injection attempt. However, encoding the payload using XML hexadecimal character references allowed it to bypass the filter. The database then processed the injected query, allowing usernames and associated password values to be retrieved from the `users` table.
