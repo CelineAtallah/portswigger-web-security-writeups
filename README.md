@@ -23,4 +23,6 @@ Each write-up aims to document:
 
 ## Lab Write-ups
 ### Access Control
-* [Multi-Step Process with No Access Control on One Step](access-control/multi-step-process-no-access-control.md) - Practitioner
+* [Multi-Step Process with No Access Control on One Step](access-control/README.md) - Practitioner
+### SQL Injection
+* [SQL Injection with Filter Bypass via XML Encoding](sql-injection/README.md) - Practitioner
