@@ -1,3 +1,4 @@
+
 # Lab: Finding and Exploiting an Unused API Endpoint - API Security
 
 **Platform:** PortSwigger Web Security Academy  
@@ -6,113 +7,85 @@
 **Lab:** [Open the official lab](https://portswigger.net/web-security/api-testing/lab-exploiting-unused-api-endpoint)
 
 ## 1. Executive Summary
-An API security vulnerability was identified in a PortSwigger Web Security Academy lab, "Finding and exploiting an unused API endpoint".
-The application exposed an API endpoint that supported both retrieving and modifying product prices. Although the price modification operation required authentication, the application allowed an authenticated customer to change the price of the Lightweight "l33t" Leather Jacket by sending a crafted `PATCH` request.
-By setting the `price` parameter to `0`, the product price was changed to `$0.00`. The updated price was reflected on the product page, and the jacket could be added to the basket and ordered at the modified price.
+This lab demonstrates an API authorization vulnerability that allows an authenticated customer to modify a product's price through an API endpoint intended to support price updates.
+By inspecting the API's allowed HTTP methods and testing the `PATCH` method, it was possible to identify an endpoint that accepted a customer-supplied price. Using the authenticated `wiener` account, the product price was changed from `$1337.00` to `$0.00`. The modified price was reflected on the product page, allowing the item to be purchased at the altered price and the lab to be completed.
 
 ## 2. Vulnerability Details
 - **Category:** API Security
 - **Vulnerability Type:** Improper authorization of product price modification
 - **Affected Endpoint:** `/api/products/1/price`
 - **Affected HTTP Methods:** `GET`, `PATCH`
-- **CWE:** CWE-862 — Missing Authorization
+- **CWE:** CWE-862 - Missing Authorization
 
 ### Impact
 An authenticated customer could modify a product's price without having the appropriate administrative permissions. This could allow products to be purchased at unintended prices, resulting in financial loss and undermining the integrity of the application's pricing and checkout processes.
 
 ## 3. Technical Analysis
-The application used the API endpoint `/api/products/1/price` to retrieve the price of a product. The initial request was captured in Burp Proxy and sent to Burp Repeater for inspection.
+
+### 3.1 Inspecting the Product Price Endpoint
+The product page was accessed through Burp's browser while authenticated as `wiener`. In Burp Proxy's HTTP history, the request retrieving the product's price was identified and sent to Burp Repeater.
+
 The original request was:
 ```http
 GET /api/products/1/price HTTP/2
+Host: 0a99005b0485e88981fba29500e60004.web-security-academy.net
 ```
-The server returned `200 OK` with a JSON response containing the product price:
+The server returned `200 OK` with the product's current price in JSON format:
 ```json
-{
-  "price": "$1337.00",
-  "message": "Your neighbor just bought 1 of these! Don't feel left out!"
-}
+{"price":"$1337.00","message":"Your neighbor just bought 1 of these! Don't feel left out!"}
 ```
-This confirmed that the endpoint provided product pricing information.
+This established the API endpoint used to retrieve the product's current price.
 
-### Identifying the Supported HTTP Methods
+### 3.2 Identifying the Supported HTTP Methods
 The request method was changed from `GET` to `OPTIONS` in Burp Repeater. The server returned:
 ```http
 HTTP/2 405 Method Not Allowed
 Allow: GET, PATCH
 ```
-Although the server rejected the `OPTIONS` request, the `Allow` response header indicated that `GET` and `PATCH` were permitted methods for the endpoint.
-The `PATCH` method was therefore investigated to determine whether it could be used to modify the product price.
+Although the server did not accept the `OPTIONS` request, the `Allow` response header indicated that `GET` and `PATCH` were supported methods. This suggested that the endpoint could support price modifications, so the `PATCH` method was tested.
 
-### Identifying the Authentication Requirement
-An initial `PATCH` request returned:
+### 3.3 Testing the PATCH Request and Required Parameters
+An initial `PATCH` request returned `401 Unauthorized`. The request was then recaptured from the authenticated browser session, and testing continued using that request.
+The first authenticated `PATCH` attempt returned an error indicating that only `application/json` content was supported. After setting the `Content-Type` header to `application/json` and submitting an empty JSON body, the server returned:
 ```http
-HTTP/2 401 Unauthorized
-```
-This indicated that authentication was required for the price modification operation.
-The application was then accessed using the lab-provided credentials `wiener:peter`. After authentication, a fresh API request for the Lightweight "l33t" Leather Jacket was captured and sent to Burp Repeater.
-
-### Identifying the Required Request Format
-The authenticated request was changed to use the `PATCH` method. The initial attempt returned an error indicating that the endpoint supported only the `application/json` content type:
-```json
-{
-  "type": "ClientError",
-  "code": 400,
-  "error": "Only 'application/json' Content-Type is supported"
-}
-```
-The following header was added to the request:
-```http
+HTTP/2 400 Bad Request
 Content-Type: application/json
+{"type":"ClientError","code":400,"error":"'price' parameter missing in body"}
 ```
-An empty JSON object was then supplied as the request body:
-```json
-{}
-```
-The server returned another validation error:
-```json
-{
-  "type": "ClientError",
-  "code": 400,
-  "error": "'price' parameter missing in body"
-}
-```
-This response confirmed that the request body needed to contain a `price` parameter.
+This response indicated that the endpoint expected a `price` parameter in the JSON request body.
 
-### Exploiting the Price Modification Endpoint
-The request body was changed to include a price value of zero:
-```json
-{"price":0}
-```
-The resulting request was:
+### 3.4 Modifying the Product Price
+The request body was changed to specify a price of zero:
 ```http
 PATCH /api/products/1/price HTTP/2
 Content-Type: application/json
 {"price":0}
 ```
-The server returned `200 OK` with the following response:
-```json
+The server accepted the request and returned:
+```http
+HTTP/2 200 OK
+Content-Type: application/json
 {"price":"$0.00"}
 ```
-Reloading the product page confirmed that the displayed price had changed to `$0.00`. The jacket was then added to the basket, and the order was placed successfully to complete the lab.
-This demonstrated that an authenticated customer could modify product pricing through an API endpoint without the appropriate authorization restrictions.
+The successful response confirmed that the API processed the customer-supplied price modification.
+The product page was then reloaded, and the displayed price had changed to `$0.00`. The leather jacket was added to the basket, and the order was placed successfully, completing the lab.
+These results demonstrate that an authenticated customer account could modify a product's price through the API without adequate authorization controls restricting this sensitive operation.
 
 ## 4. Proof of Concept
 ### Step 1: Capture the original product price request
-The product page was accessed through Burp's browser. In Burp Proxy's HTTP history, the request to `/api/products/1/price` was identified and sent to Burp Repeater.
-The original `GET` request returned `200 OK` and the product's current price in JSON format.
+The product page was accessed through Burp's browser while authenticated as `wiener`. In Burp Proxy's HTTP history, the request to `/api/products/1/price` was identified and sent to Burp Repeater.
+The original `GET` request returned `200 OK` and the product's current price, `$1337.00`, in JSON format.
 
 **Evidence:** `01-get-product-price.png`
 
 ### Step 2: Identify the supported HTTP methods
 The request method was changed to `OPTIONS` and sent through Burp Repeater.
-The server returned `405 Method Not Allowed` with the response header `Allow: GET, PATCH`, indicating that `PATCH` was an allowed method.
+The server returned `405 Method Not Allowed` with the response header `Allow: GET, PATCH`, indicating that `PATCH` was an allowed method for the endpoint.
 
 **Evidence:** `02-options-allowed-methods.png`
 
 ### Step 3: Identify the required JSON parameter
-After authenticating to the application, a fresh request for the leather jacket was sent to Burp Repeater and changed to `PATCH`.
-An empty JSON body was submitted with the header `Content-Type: application/json`:
+Using a fresh request captured after authenticating as `wiener`, the request method was changed to `PATCH` and the header `Content-Type: application/json` was added. An empty JSON body was submitted:
 ```json
 {}
 ```
@@ -129,7 +102,7 @@ The server returned `200 OK` with the response:
 ```json
 {"price":"$0.00"}
 ```
-This confirmed that the API accepted the price modification.
+This confirmed that the authenticated customer account could modify the product's price through the API.
 
 **Evidence:** `04-patch-price-updated.png`
 
@@ -139,7 +112,7 @@ The leather jacket product page was reloaded in Burp's browser. The displayed pr
 **Evidence:** `05-product-price-zero.png`
 
 ### Step 6: Purchase the product at the modified price
-The leather jacket was added to the basket. The basket was opened to verify the product and its modified price, and the order was placed to complete the lab.
+The leather jacket was added to the basket. The basket was opened to verify the product and its modified price, and the order was placed successfully to complete the lab.
 
 **Evidence:** `06-basket-zero-price.png`
 
@@ -149,17 +122,13 @@ The PortSwigger Web Security Academy lab page was checked to confirm that the la
 **Evidence:** `07-lab-solved.png`
 
 ## 5. Root Cause
-The API allowed an authenticated customer to invoke a product price modification operation without adequately enforcing authorization based on the user's role and permissions.
-Authentication alone did not prevent the customer from changing a business-critical value. The endpoint accepted a client-supplied `price` parameter and applied the modification without verifying that the authenticated user was authorized to manage product pricing.
+The API endpoint accepted a customer-supplied price and processed the update without adequately restricting the operation to an authorized role. Authentication alone was insufficient to protect this sensitive action: the application needed to verify that the account was permitted to modify product pricing.
 
 ## 6. Remediation
-- **Enforce server-side authorization:** Restrict product price modification to authorized administrators or other explicitly permitted roles. Do not rely on authentication alone.
-- **Separate administrative functionality:** Expose price modification through a properly protected administrative API rather than making it available to ordinary customer accounts.
-- **Validate permissions on every request:** Verify the authenticated user's authorization for the specific operation, regardless of whether the endpoint is used by the visible interface.
-- **Protect product pricing integrity:** Store authoritative product prices on the server and prevent ordinary customers from modifying them through API requests.
-- **Calculate order totals server-side:** Recalculate basket and checkout totals using trusted product records rather than accepting client-controlled prices.
-- **Add authorization tests:** Verify that customer accounts cannot modify prices, even when they directly invoke API endpoints that are not used by the normal interface.
-- **Log sensitive changes:** Record administrative price modifications and relevant authorization failures for monitoring and investigation.
+- **Enforce role-based authorization:** Restrict product-price modifications to authorized administrative roles. Ordinary customer accounts must not be able to change prices.
+- **Use trusted server-side pricing:** Retrieve product prices from trusted server-side records and calculate order totals on the server. Do not accept a customer-supplied price as authoritative during checkout.
+- **Test authorization boundaries:** Add regression tests to verify that ordinary customer accounts cannot modify product prices through API endpoints, including endpoints not exposed in the user interface.
+- **Audit sensitive changes:** Log product-price modifications with the responsible account, affected product, and change details to support investigation and accountability.
 
 ## 7. Tools Used
 - Burp Suite Community Edition
@@ -167,6 +136,3 @@ Authentication alone did not prevent the customer from changing a business-criti
 - Burp Repeater
 - Burp's browser
 - PortSwigger Web Security Academy
-
-
-This write-up documents the observed behavior of the training application and is intended for educational purposes. Testing against real systems should only be performed with explicit authorization.
