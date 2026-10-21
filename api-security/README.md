@@ -28,11 +28,10 @@ The product page was accessed through Burp's browser while authenticated as `wie
 The original request was:
 ```http
 GET /api/products/1/price HTTP/2
-Host: 0a99005b0485e88981fba29500e60004.web-security-academy.net
 ```
 The server returned `200 OK` with the product's current price in JSON format:
 ```json
-{"price":"$1337.00","message":"Your neighbor just bought 1 of these! Don't feel left out!"}
+{"price":"$1337.00","message":"This item is in high demand - 6 purchased recently"}
 ```
 This established the API endpoint used to retrieve the product's current price.
 
