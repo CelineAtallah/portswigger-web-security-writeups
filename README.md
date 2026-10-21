@@ -3,15 +3,9 @@ A collection of selected web security lab write-ups documenting practical vulner
 The goal of this repository is to develop and demonstrate a structured approach to web application penetration testing, from identifying potential weaknesses to validating their impact and recommending appropriate security controls.
 
 ## Areas Covered
-* **Access Control:** Testing for missing authorization checks in multi-step workflows and identifying opportunities for unauthorized privilege escalation.
-* **SQL Injection:** Testing for SQL injection in application inputs, bypassing input filters through XML entity encoding, and assessing the potential for unauthorized database data retrieval.
-
-
-## Areas Covered
 - **Access Control:** Testing for missing authorization checks in multi-step workflows and identifying opportunities for unauthorized privilege escalation.
 - **SQL Injection:** Testing for SQL injection in application inputs, bypassing input filters through XML entity encoding, and assessing the potential for unauthorized database data retrieval.
-- **Server-Side Request Forgery (SSRF):** Testing whether user-controlled URLs can manipulate server-side requests and access restricted internal resources through insufficiently validated requests.
-- **Server-Side Request Forgery (SSRF):** Testing whether user-controlled URLs can manipulate server-side requests and access restricted internal resources through insufficiently validated requests.
+- **Server-Side Request Forgery (SSRF):** Testing for insufficient validation of server-side requests and bypassing blacklist-based input filters to access restricted internal resources.
 
 ## Methodology
 Each write-up aims to document:
@@ -30,9 +24,8 @@ Each write-up aims to document:
 
 ## Lab Write-ups
 ### Access Control
-* [Multi-Step Process with No Access Control on One Step](access-control/README.md) - Practitioner
+- [Multi-Step Process with No Access Control on One Step](https://github.com/CelineAtallah/portswigger-web-security-writeups/blob/main/access-control/README.md) - Practitioner
 ### SQL Injection
-* [SQL Injection with Filter Bypass via XML Encoding](sql-injection/README.md) - Practitioner
-
+- [SQL Injection with Filter Bypass via XML Encoding](https://github.com/CelineAtallah/portswigger-web-security-writeups/blob/main/sql-injection/README.md) - Practitioner
 ### Server-Side Request Forgery (SSRF)
-* [SSRF with Blacklist-Based Input Filter](https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter) — Practitioner
+- [SSRF with Blacklist-Based Input Filter](https://github.com/CelineAtallah/portswigger-web-security-writeups/blob/main/server-side-request-forgery/README.md) - Practitioner
